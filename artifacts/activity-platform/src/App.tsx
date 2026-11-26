@@ -55,7 +55,7 @@ function RedirectToHome() {
 function RedirectToAiThinkingProgramme() {
   const [, setLocation] = useLocation();
   useEffect(() => {
-    setLocation("/programmes/ai-thinking-communication", { replace: true });
+    setLocation("/programmes/ai-thinking-communication-course", { replace: true });
   }, [setLocation]);
   return null;
 }

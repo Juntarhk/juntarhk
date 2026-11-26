@@ -8,7 +8,7 @@
     "build": "vite build --config vite.config.ts && node prerender.mjs",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "start:prod": "NODE_ENV=production node server.mjs",
-    "test": "node --test navbar-responsive.test.mjs",
+    "test": "node --test *.test.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

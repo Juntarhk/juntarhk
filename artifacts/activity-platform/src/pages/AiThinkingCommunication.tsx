@@ -90,7 +90,7 @@ export default function AiThinkingCommunication() {
           { icon: ImageIcon, label: isZh ? "AI 圖像作品集" : "AI Image Portfolio" },
           { icon: Brain, label: isZh ? "個人 Prompt Portfolio" : "Personal Prompt Portfolio" },
         ],
-        programmeSlug: "ai-thinking-communication",
+        programmeSlug: "ai-thinking-communication-course",
         programmeCtaLabel: isZh ? "查看完整課程詳情" : "View Full Programme Details",
         enquiryTitle: isZh ? "查詢 AI 思維與溝通課" : "Enquire About This Course",
         enquiryActivity: isZh ? "AI 思維與溝通課" : "AI Thinking & Communication",
