@@ -1,0 +1,21 @@
+packages:
+  "framer-motion": "For premium page transitions, scroll animations, and micro-interactions"
+  "@hookform/resolvers": "For Zod validation integration with react-hook-form"
+  "react-hook-form": "For robust enquiry and contact form state management"
+  "zod": "For form schema validation"
+
+images:
+  - path: "artifacts/activity-platform/public/images/hero-bg.png"
+    description: "A vibrant, cheerful and modern vector flat art illustration of diverse kids engaging in outdoor camping, kayaking, and cultural activities in a lush green nature setting with warm sunshine, suitable for a kid-friendly educational web platform hero banner"
+    aspect_ratio: "16:9"
+  - path: "artifacts/activity-platform/public/images/about-hero.png"
+    description: "Beautiful clean modern landscape illustration of a mountain peak, forest, and river, representing adventure, nature exploration, and outdoor education, using warm and earthy terracotta and forest green colors"
+    aspect_ratio: "16:9"
+  - path: "artifacts/activity-platform/public/images/pattern-bg.png"
+    description: "Seamless abstract geometric pattern background with soft organic shapes like leaves, suns, tents, and waves in subtle pastel green, orange, and beige colors, very light and minimal"
+    aspect_ratio: "16:9"
+
+notes:
+  - Using generated Orval hooks from @workspace/api-client-react
+  - Assuming UI components like button, input, card, dialog, form are available in @/components/ui/ or standard HTML will be heavily styled
+  - Primary language is Traditional Chinese with English accents, targeting HK schools

@@ -1,0 +1,34 @@
+# JuntarHK
+> Hong Kong provider of extracurricular (ECA) and experiential education programmes for schools. Serving Hong Kong kindergartens, primary and secondary schools since 2023.
+
+JuntarHK plans and runs turnkey school ECA programmes — STEM workshops, adventure training, emerging sports, leadership training, cultural activities, ecology exploration and life-planning — with SCRC-checked instructors, full insurance and an 80,000 sq.ft. private outdoor campsite (sister company Bula Land). All programmes align with Hong Kong school funding schemes (LWLF All-round Learning Grant and QEF Quality Education Fund).
+
+Audience: Hong Kong kindergartens, primary schools, secondary schools, NGOs and project companies.
+
+## Primary pages (Traditional Chinese, default)
+- https://www.juntarhk.com/ — Home
+- https://www.juntarhk.com/activities — Programme catalogue
+- https://www.juntarhk.com/about — About JuntarHK
+- https://www.juntarhk.com/partners — Partner schools & organisations
+- https://www.juntarhk.com/contact — Contact & enquiry
+
+## Primary pages (English, en-HK)
+- https://www.juntarhk.com/en — Home
+- https://www.juntarhk.com/en/activities — Programme catalogue
+- https://www.juntarhk.com/en/about — About JuntarHK
+- https://www.juntarhk.com/en/partners — Partner schools & organisations
+- https://www.juntarhk.com/en/contact — Contact & enquiry
+
+## Topics
+- STEM workshops (coding, robotics, AI thinking)
+- Outdoor & adventure education (rock climbing, giant ladder, rope courses, orienteering)
+- Emerging sports and team building
+- Leadership training
+- Chinese cultural activities and arts
+- Ecology exploration
+- School funding alignment (LWLF All-round Learning Grant, QEF Quality Education Fund)
+
+## Notes
+- Bilingual site: Traditional Chinese (zh-HK) is the default at the root path; English (en-HK) lives under /en. Each page has reciprocal hreflang alternates.
+- Contact: +852 9728 9412 · info@juntarhk.com · Hong Kong (Hong Kong Island, Kowloon, New Territories, Outlying Islands).
+- Sitemap: https://www.juntarhk.com/sitemap.xml

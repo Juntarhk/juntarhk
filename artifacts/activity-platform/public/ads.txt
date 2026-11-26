@@ -1,0 +1,7 @@
+# JuntarHK ads.txt
+# This site does not currently sell digital advertising inventory through
+# authorized digital sellers. This file is provided to satisfy crawler
+# expectations. If/when partnerships are added, entries will be listed below
+# in the standard "domain, publisher_id, relationship, certification_id"
+# format per IAB Tech Lab specification.
+placeholder.example.com, 0, DIRECT

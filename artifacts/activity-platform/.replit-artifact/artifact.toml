@@ -1,0 +1,38 @@
+kind = "web"
+previewPath = "/"
+title = "課外活動平台 - JuntarHK"
+version = "1.0.0"
+id = "artifacts/activity-platform"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18504
+
+[services.development]
+run = "pnpm --filter @workspace/activity-platform run dev"
+
+[services.production.build]
+args = ["pnpm", "--filter", "@workspace/activity-platform", "run", "build"]
+
+[services.production.build.env]
+NODE_ENV = "production"
+
+[services.production.run]
+args = ["node", "artifacts/activity-platform/server.mjs"]
+
+[services.production.run.env]
+PORT = "18504"
+NODE_ENV = "production"
+
+[services.production.health.startup]
+path = "/"
+
+[services.env]
+PORT = "18504"
+BASE_PATH = "/"

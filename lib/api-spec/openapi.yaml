@@ -1,0 +1,768 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: JuntarHK extracurricular activity platform API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: activities
+    description: Activity listings
+  - name: categories
+    description: Activity categories
+  - name: enquiries
+    description: School enquiry submissions
+  - name: storage
+    description: Object storage upload and serving endpoints
+  - name: tee
+    description: Teambuilding tee customization and checkout
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /activities:
+    get:
+      operationId: listActivities
+      tags: [activities]
+      summary: List activities
+      description: Get all activities with optional filtering
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: targetGroup
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [kindergarten, primary, secondary, all]
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Activity"
+    post:
+      operationId: createActivity
+      tags: [activities]
+      summary: Create activity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateActivityInput"
+      responses:
+        "201":
+          description: Created activity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Activity"
+
+  /activities/{id}:
+    get:
+      operationId: getActivity
+      tags: [activities]
+      summary: Get activity by ID or slug
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Activity detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Activity"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateActivity
+      tags: [activities]
+      summary: Update an activity (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateActivityInput"
+      responses:
+        "200":
+          description: Updated activity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Activity"
+        "404":
+          description: Not found
+    delete:
+      operationId: deleteActivity
+      tags: [activities]
+      summary: Delete an activity (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+        "404":
+          description: Not found
+
+  /storage/uploads/request-url:
+    post:
+      tags: [storage]
+      operationId: requestUploadUrl
+      summary: Request a presigned URL for file upload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUploadUrlBody"
+      responses:
+        "200":
+          description: Presigned upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestUploadUrlResponse"
+        "400":
+          description: Missing or invalid fields
+        "500":
+          description: Failed to generate upload URL
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /enquiries:
+    post:
+      operationId: submitEnquiry
+      tags: [enquiries]
+      summary: Submit school enquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnquiryInput"
+      responses:
+        "201":
+          description: Enquiry submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Enquiry"
+    get:
+      operationId: listEnquiries
+      tags: [enquiries]
+      summary: List all enquiries (admin)
+      responses:
+        "200":
+          description: List of enquiries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Enquiry"
+
+  /tee/product:
+    get:
+      operationId: getTeeProduct
+      tags: [tee]
+      summary: Get teambuilding tee unit pricing
+      responses:
+        "200":
+          description: Tee product pricing info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeeProductInfo"
+        "503":
+          description: Product not available yet
+
+  /tee/checkout:
+    post:
+      operationId: createTeeCheckout
+      tags: [tee]
+      summary: Create a Stripe Checkout session for a tee order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTeeCheckoutInput"
+      responses:
+        "200":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                required: [url]
+        "422":
+          description: Invalid input
+        "503":
+          description: Payments not available
+
+  /tee/orders:
+    get:
+      operationId: listTeeOrders
+      tags: [tee]
+      summary: List tee orders (admin)
+      responses:
+        "200":
+          description: List of tee orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TeeOrder"
+        "401":
+          description: Unauthorized
+
+  /tee/orders/by-session/{sessionId}:
+    get:
+      operationId: getTeeOrderBySession
+      tags: [tee]
+      summary: Get a tee order by Stripe Checkout session ID
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tee order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeeOrder"
+        "404":
+          description: Not found
+
+components:
+  schemas:
+    TeeProductInfo:
+      type: object
+      properties:
+        unitAmount:
+          type: integer
+          description: Price per tee in cents (HKD)
+        currency:
+          type: string
+      required:
+        - unitAmount
+        - currency
+
+    CreateTeeCheckoutInput:
+      type: object
+      properties:
+        color:
+          type: string
+          enum: [white, black, navy, red, forest]
+        size:
+          type: string
+          enum: [XS, S, M, L, XL, XXL]
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 500
+        teamName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        printText:
+          type: string
+          maxLength: 200
+          nullable: true
+        designNotes:
+          type: string
+          maxLength: 1000
+          nullable: true
+        contactName:
+          type: string
+          maxLength: 100
+          nullable: true
+        contactPhone:
+          type: string
+          maxLength: 50
+          nullable: true
+        lang:
+          type: string
+          enum: [zh, en]
+      required:
+        - color
+        - size
+        - quantity
+        - teamName
+
+    TeeOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+        stripeSessionId:
+          type: string
+        stripePaymentIntentId:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, paid]
+        color:
+          type: string
+        size:
+          type: string
+        quantity:
+          type: integer
+        unitAmount:
+          type: integer
+        totalAmount:
+          type: integer
+        currency:
+          type: string
+        teamName:
+          type: string
+        printText:
+          type: string
+          nullable: true
+        designNotes:
+          type: string
+          nullable: true
+        contactName:
+          type: string
+          nullable: true
+        contactEmail:
+          type: string
+          nullable: true
+        contactPhone:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - stripeSessionId
+        - status
+        - color
+        - size
+        - quantity
+        - unitAmount
+        - totalAmount
+        - currency
+        - teamName
+        - createdAt
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        titleEn:
+          type: string
+        slug:
+          type: string
+          nullable: true
+        description:
+          type: string
+        descriptionEn:
+          type: string
+          nullable: true
+        categoryId:
+          type: integer
+        categoryName:
+          type: string
+        targetGroup:
+          type: array
+          items:
+            type: string
+            enum: [kindergarten, primary, secondary]
+        duration:
+          type: string
+        durationEn:
+          type: string
+          nullable: true
+        minParticipants:
+          type: integer
+        maxParticipants:
+          type: integer
+        location:
+          type: string
+        locationEn:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+          nullable: true
+        featured:
+          type: boolean
+        seoTitle:
+          type: string
+          nullable: true
+        seoDescription:
+          type: string
+          nullable: true
+        seoKeywords:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - titleEn
+        - description
+        - categoryId
+        - categoryName
+        - targetGroup
+        - duration
+        - minParticipants
+        - maxParticipants
+        - location
+        - featured
+        - createdAt
+
+    CreateActivityInput:
+      type: object
+      properties:
+        title:
+          type: string
+        titleEn:
+          type: string
+        slug:
+          type: string
+          nullable: true
+        description:
+          type: string
+        descriptionEn:
+          type: string
+          nullable: true
+        categoryId:
+          type: integer
+        targetGroup:
+          type: array
+          items:
+            type: string
+            enum: [kindergarten, primary, secondary]
+        duration:
+          type: string
+        durationEn:
+          type: string
+          nullable: true
+        minParticipants:
+          type: integer
+        maxParticipants:
+          type: integer
+        location:
+          type: string
+        locationEn:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+          nullable: true
+        featured:
+          type: boolean
+        seoTitle:
+          type: string
+          nullable: true
+        seoDescription:
+          type: string
+          nullable: true
+        seoKeywords:
+          type: string
+          nullable: true
+      required:
+        - title
+        - titleEn
+        - description
+        - categoryId
+        - targetGroup
+        - duration
+        - minParticipants
+        - maxParticipants
+        - location
+        - featured
+
+    UpdateActivityInput:
+      type: object
+      properties:
+        title:
+          type: string
+        titleEn:
+          type: string
+        slug:
+          type: string
+          nullable: true
+        description:
+          type: string
+        descriptionEn:
+          type: string
+          nullable: true
+        categoryId:
+          type: integer
+        targetGroup:
+          type: array
+          items:
+            type: string
+            enum: [kindergarten, primary, secondary]
+        duration:
+          type: string
+        durationEn:
+          type: string
+          nullable: true
+        minParticipants:
+          type: integer
+        maxParticipants:
+          type: integer
+        location:
+          type: string
+        locationEn:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+          nullable: true
+        featured:
+          type: boolean
+        seoTitle:
+          type: string
+          nullable: true
+        seoDescription:
+          type: string
+          nullable: true
+        seoKeywords:
+          type: string
+          nullable: true
+
+    RequestUploadUrlBody:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+        size:
+          type: integer
+        contentType:
+          type: string
+
+    RequestUploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+        objectPath:
+          type: string
+        metadata:
+          type: object
+          properties:
+            name:
+              type: string
+            size:
+              type: integer
+            contentType:
+              type: string
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+          nullable: true
+        name:
+          type: string
+        nameEn:
+          type: string
+        icon:
+          type: string
+        color:
+          type: string
+        activityCount:
+          type: integer
+      required:
+        - id
+        - name
+        - nameEn
+        - icon
+        - color
+        - activityCount
+
+    Enquiry:
+      type: object
+      properties:
+        id:
+          type: integer
+        schoolName:
+          type: string
+        contactName:
+          type: string
+        contactEmail:
+          type: string
+        contactPhone:
+          type: string
+        schoolType:
+          type: string
+          enum: [kindergarten, primary, secondary, tertiary, ngo, company, others]
+        message:
+          type: string
+        activityInterest:
+          type: string
+          nullable: true
+        plannedDate:
+          type: string
+          nullable: true
+        plannedParticipants:
+          type: string
+          nullable: true
+        activityCategory:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, replied, closed]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - schoolName
+        - contactName
+        - contactEmail
+        - contactPhone
+        - schoolType
+        - message
+        - status
+        - createdAt
+
+    CreateEnquiryInput:
+      type: object
+      properties:
+        schoolName:
+          type: string
+        contactName:
+          type: string
+        contactEmail:
+          type: string
+          format: email
+          nullable: true
+        contactPhone:
+          type: string
+          nullable: true
+        schoolType:
+          type: string
+          enum: [kindergarten, primary, secondary, tertiary, ngo, company, others]
+        message:
+          type: string
+        activityInterest:
+          type: string
+          nullable: true
+        plannedDate:
+          type: string
+          nullable: true
+        plannedParticipants:
+          type: string
+          nullable: true
+        activityCategory:
+          type: string
+          nullable: true
+      required:
+        - schoolName
+        - contactName
+        - schoolType
+        - message
