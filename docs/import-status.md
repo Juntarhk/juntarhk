@@ -37,9 +37,33 @@ checking the applications.
   enquiry listing, unauthenticated rejection, and test-record cleanup.
 - A high-confidence hardcoded credential scan found no matching credentials in
   the imported source. This was not a comprehensive security audit.
-- Browser verification is pending.
+- A fresh clone of the published GitHub branch, including `git lfs pull`,
+  reproduced all 376 public files with matching SHA-256 hashes.
+- Browser checks passed for Chinese-to-English navigation, the seeded catalog
+  and category filter, a photography course detail, and opening/closing its
+  enquiry modal without submission. A recording is attached to the pull request.
+- The browser journey also exposed an existing AI programme-link mismatch,
+  described below. The overall browser run was therefore not an all-pass run.
 
 Production credentials and databases were not used. Real email delivery,
 Stripe checkout/webhooks, and Replit bucket uploads were not exercised.
 Existing large-bundle and missing decorative `/pattern.svg` build warnings are
 preserved rather than addressed as part of the import.
+
+## Existing source issue found during browser verification
+
+The AI Thinking & Communication activity links through an App.tsx redirect to
+`/programmes/ai-thinking-communication`, but the static `PROGRAMME_MAP` contains
+the slug `ai-thinking-communication-course`. The imported development build
+therefore displays "Programme not found" on that journey. Both affected source
+files are byte-for-byte identical to the prototype snapshot; this is not an
+import regression. The production site's current runtime outcome was not
+tested.
+
+This behavior is preserved for a separate product fix rather than silently
+changing the approved source baseline. Some seeded English catalog content
+also still contains Chinese labels or descriptions.
+
+No GitHub CI checks were reported for the import branch, and no required status
+checks were returned for the base branch when checked. Local results above
+are not a claim that GitHub CI ran.
